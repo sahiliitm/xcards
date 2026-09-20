@@ -42,8 +42,11 @@ def main():
     paper_map = {}
     for e in entries:
         text = e["text"]
-        if "paper: http" in text:
-            paper_map[e["id"]] = text.split("paper: ", 1)[1].strip().split()[0]
+        m = re.search(r"(?:paper|link|receipts): (https?://\S+)", text) if False else None
+        for prefix in ("paper: ", "link: ", "receipts: "):
+            if prefix in text:
+                paper_map[e["id"]] = text.split(prefix, 1)[1].strip().split()[0]
+                break
     made = []
     for e in entries:
         eid = e["id"]
